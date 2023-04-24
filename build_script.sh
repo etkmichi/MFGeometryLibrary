@@ -1,5 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
+# set -euo pipefail
+
+source functions.sh
+source required_repos.sh
 #Debug or Release
 build_target=$1
 
@@ -8,14 +12,13 @@ build_others=$2
 project_name="MFGeometryLibrary"
 
 #other libraries which are needed for this project
-git_repos=(
-    "https://github.com/etkmichi/MFBasics.git"
-)
+
 if [ "$build_others" == "yes" ]; then
     #iterate over others provided by git_repos clone them and execute the build_script
     echo "This build script will download and build other git repositiories!"
 
 fi
+
 #get directory of build script
 directory=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
@@ -26,6 +29,7 @@ source $directory/setup_environment.sh
 # echo $BULLET_PHYSICS_HEADERS
 
 cd $directory
+
 if [ "$build_target" == "h" -o "$build_target" == "help" -o "$build_target" == "-h" -o "$build_target" == "--help" ]; then
     echo "r|R|release|Release - create release build target"
     echo "d|D|debug|Debug - create debug build target"
@@ -52,6 +56,33 @@ do
             $build_target="";;
     esac
 done
+
+#iterate over git repos and download/build dependencies
+#ask for permission to download and compile dependencies
+echo "Some dependencies should be downloaded and compiled:"
+echo ${git_repos[@]}
+echo "Accept download? a(all)/y(ask before)/n(no)"
+read -p "" download_files
+for repo in ${git_repos[@]}; do
+    if [ "$download_files" == "y" ]; then
+        echo "Downloading and compiling:"
+        echo $repo
+        echo "Accept download? a(all)/y/n :"
+        read -p "" temp_d
+        case $temp_d in
+        "a"|"all")download_files="a";;
+        "n"|"no")continue;;
+        esac
+    fi
+
+    # git clone $repo
+
+    getRepoName
+    cd $dir_name
+
+    ./build_script.sh $build_target
+done
+
 if [ "$build_target" == "Clean" ]; then
     cd $directory/$project_name/Debug
     make clean

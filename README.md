@@ -1,6 +1,6 @@
 # MFGeometryLibrary
 Library for creating some geometrical objects and their physics representation of bulletPhysics.
-Base geometries can be found in the dir [MFBaseGeometries](https://github.com/etkmichi/MFGeometryLibrary/tree/main/MFGeometryLibrary/MFBaseGeometries)
+Basic geometries can be found in the dir [MFBaseGeometries](https://github.com/etkmichi/MFGeometryLibrary/tree/main/MFGeometryLibrary/MFBaseGeometries)
 
 
 To build the library (For a release build, replace "Debug" with "Release" in the last line):
